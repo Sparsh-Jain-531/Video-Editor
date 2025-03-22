@@ -6,6 +6,7 @@ import { PlayArrow, Pause } from "@mui/icons-material";
 
 const VideoUpload = ({ onVideoUpload }) => {
   const [videoFile, setVideoFile] = useState(null);
+  const [videoName, setVideoName] = useState("");
   const [crop, setCrop] = useState({
     width: 800,
     height: 430,
@@ -26,6 +27,7 @@ const VideoUpload = ({ onVideoUpload }) => {
     if (file) {
       const videoURL = URL.createObjectURL(file);
       setVideoFile(videoURL);
+      setVideoName(file.name);
       if (onVideoUpload) {
         onVideoUpload(file);
       }
@@ -54,7 +56,6 @@ const VideoUpload = ({ onVideoUpload }) => {
       { start: timeRange[0], end: timeRange[1], X: crop.x, Y: crop.y },
     ]);
   };
-  console.log(selectedSections)
 
   return (
     <div>
@@ -73,7 +74,10 @@ const VideoUpload = ({ onVideoUpload }) => {
       )}
 
       {videoFile && (
-        <div className="flex flex-col gap-10 justify-center items-center py-10 bg-blue-900 relative">
+        <div className="flex flex-col gap-4 justify-center items-center py-10 bg-blue-900 relative">
+          <div className="text-white text-sm">
+            {videoName}
+          </div>
           {/* Video Player with 16:9 aspect ratio */}
           <div className="relative" style={{ width: VIDEO_WIDTH, height: VIDEO_HEIGHT }}>
             <ReactPlayer
@@ -111,13 +115,16 @@ const VideoUpload = ({ onVideoUpload }) => {
 
           {/* Video Controls & Cropping Options */}
           <div className="flex items-center w-[55%] mt-4">
-            <button onClick={togglePlayPause} className="mr-4 p-2 bg-gray-700 text-white rounded-full">
+            <button onClick={togglePlayPause} className="mr-4 p-2 bg-blue-950 text-white rounded-full">
               {isPlaying ? <Pause fontSize="large" /> : <PlayArrow fontSize="large" />}
             </button>
-            <button onClick={() => setRatio(16, 9)} className="mx-2 p-2 bg-gray-700 text-white rounded-sm">
+            <button onClick={() => setRatio(VIDEO_WIDTH, VIDEO_HEIGHT)} className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg">
+              Original
+            </button>
+            <button onClick={() => setRatio(16, 9)} className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg">
               16:9
             </button>
-            <button onClick={() => setRatio(9, 16)} className="mx-2 p-2 bg-gray-700 text-white rounded-sm">
+            <button onClick={() => setRatio(9, 16)} className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg">
               9:16
             </button>
             <span className="text-white mx-4">
@@ -131,7 +138,7 @@ const VideoUpload = ({ onVideoUpload }) => {
               valueLabelDisplay="auto"
               className="flex-1"
             />
-            <button onClick={addTimeSection} className="ml-4 p-2 bg-green-500 text-white rounded-sm">
+            <button onClick={addTimeSection} className="ml-4 p-2 bg-green-600 hover:bg-green-700 transition-all text-white rounded-lg">
               Add Section
             </button>
             <div className="mx-4 flex justify-center items-center text-white">
@@ -146,10 +153,10 @@ const VideoUpload = ({ onVideoUpload }) => {
             {selectedSections.length > 0 && <div className="text-white text-lg font-semibold text-center mb-2">Selected Timelines - </div>}
             {selectedSections.map((section, index) => (
               <div key={index} className="text-white">
-                <span className="my-1">
-                  <span className="mr-5"><span className="font-semibold font-serif">Time: </span>{`Start: ${section.start}s, End: ${section.end}s`}</span>
-                  <span><span className="font-semibold font-serif">Dimensions: </span>{`X: ${section.X}px, Y: ${section.Y}px`}</span>
-                </span>
+                <div className="my-1 flex justify-start items-center gap-5">
+                  <div className="w-56"><span className="font-semibold font-serif">Time: </span>{`Start: ${section.start}s, End: ${section.end}s`}</div>
+                  <div><span className="font-semibold font-serif">Dimensions: </span>{`X: ${section.X}px, Y: ${section.Y}px`}</div>
+                </div>
               </div>
             ))}
           </div>
