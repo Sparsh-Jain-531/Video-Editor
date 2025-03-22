@@ -19,6 +19,11 @@ const VideoUpload = ({ onVideoUpload }) => {
   const [selectedSections, setSelectedSections] = useState([]);
   const playerRef = useRef(null);
 
+  const [manualStart, setManualStart] = useState(0);
+  const [manualEnd, setManualEnd] = useState(0);
+  const [manualX, setManualX] = useState(0);
+  const [manualY, setManualY] = useState(0);
+
   const VIDEO_WIDTH = 800;
   const VIDEO_HEIGHT = 430;
 
@@ -60,6 +65,13 @@ const VideoUpload = ({ onVideoUpload }) => {
     setSelectedSections([
       ...selectedSections,
       { start: timeRange[0], end: timeRange[1], X: crop.x, Y: crop.y },
+    ]);
+  };
+
+  const addTimeSections = () => {
+    setSelectedSections([
+      ...selectedSections,
+      { start: manualStart, end: manualEnd, X: manualX, Y: manualY },
     ]);
   };
 
@@ -186,6 +198,61 @@ const VideoUpload = ({ onVideoUpload }) => {
                 </span>
               </div>
             </div>
+          </div>
+
+          <div className="flex flex-wrap justify-center items-center gap-3 mt-4 bg-blue-950 p-4 rounded-md">
+            <div className="text-white">Set Time & Crop Position:</div>
+            <label className="text-white" htmlFor="start">Start:</label>
+            <input
+            id="start"
+              type="number"
+              value={manualStart}
+              onChange={(e) => {
+                if(e.target.value>duration){
+                  alert("Time cannot be more than total duration of video")
+                } else {
+                  setManualStart(Number(e.target.value))
+                }
+              }}
+              placeholder="Start Time (s)"
+              className="p-2 rounded-md w-32"
+            />
+            <label className="text-white" htmlFor="start">End:</label>
+            <input
+              type="number"
+              value={manualEnd}
+              onChange={(e) => {
+                if(e.target.value>duration){
+                  alert("Time cannot be more than total duration of video")
+                } else {
+                  setManualEnd(Number(e.target.value))
+                }
+              }}
+              placeholder="End Time (s)"
+              className="p-2 rounded-md w-32"
+            />
+            <label className="text-white" htmlFor="start">X:</label>
+            <input
+              type="number"
+              value={manualX}
+              onChange={(e) => setManualX(Number(e.target.value))}
+              placeholder="X Position"
+              className="p-2 rounded-md w-32"
+            />
+            <label className="text-white" htmlFor="start">Y:</label>
+            <input
+              type="number"
+              value={manualY}
+              onChange={(e) => setManualY(Number(e.target.value))}
+              placeholder="Y Position"
+              className="p-2 rounded-md w-32"
+            />
+            <button
+              onClick={addTimeSections}
+              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-all"
+            >
+              Add Section
+            </button>
           </div>
 
           {/* Selected Time Sections */}
