@@ -35,13 +35,25 @@ const VideoUpload = ({ onVideoUpload }) => {
   // Function to handle ratio selection
   const handleRatioChange = (event) => {
     const selectedRatio = event.target.value;
+    let width, height;
+
     if (selectedRatio === "16:9") {
-      setRatio(16, 9);
+      width = Math.floor(Math.min(VIDEO_WIDTH, (VIDEO_HEIGHT * 16) / 9));
+      height = Math.floor(Math.min(VIDEO_HEIGHT, (VIDEO_WIDTH * 9) / 16));
     } else if (selectedRatio === "9:16") {
-      setRatio(9, 16);
+      width = Math.floor(Math.min(VIDEO_WIDTH, (VIDEO_HEIGHT * 9) / 16));
+      height = Math.floor(Math.min(VIDEO_HEIGHT, (VIDEO_WIDTH * 16) / 9));
     } else {
-      setRatio(VIDEO_WIDTH, VIDEO_HEIGHT);
+      width = VIDEO_WIDTH;
+      height = VIDEO_HEIGHT;
     }
+
+    setCrop({
+      width,
+      height,
+      x: Math.floor((VIDEO_WIDTH - width) / 2),
+      y: Math.floor((VIDEO_HEIGHT - height) / 2),
+    });
   };
 
   const VIDEO_WIDTH = 800;
@@ -173,24 +185,6 @@ const VideoUpload = ({ onVideoUpload }) => {
                   <PlayArrow fontSize="large" />
                 )}
               </button>
-              <button
-                onClick={() => setRatio(VIDEO_WIDTH, VIDEO_HEIGHT)}
-                className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg"
-              >
-                Original
-              </button>
-              <button
-                onClick={() => setRatio(16, 9)}
-                className="py-2 px-4 bg-blue-950 text-white rounded-lg"
-              >
-                16:9
-              </button>
-              <button
-                onClick={() => setRatio(9, 16)}
-                className="py-2 px-4 bg-blue-950 text-white rounded-lg"
-              >
-                9:16
-              </button>
               <span className="text-white min-w-28">
                 {crop.width}px x {crop.height}px
               </span>
@@ -198,7 +192,11 @@ const VideoUpload = ({ onVideoUpload }) => {
             <div className="flex justify-center items-center mx-4 min-w-72">
               <Slider
                 value={timeRange}
-                onChange={(e, newValue) => setTimeRange(newValue)}
+                onChange={(e, newValue) => {
+                  setTimeRange(newValue);
+                  setManualStart(newValue[0]);
+                  setManualEnd(newValue[1]);
+                }}
                 min={0}
                 max={Math.floor(duration)}
                 valueLabelDisplay="auto"
@@ -224,7 +222,6 @@ const VideoUpload = ({ onVideoUpload }) => {
             <div className="text-white">Set Time & Crop Position:</div>
             <label className="text-white">Ratio:</label>
             <select
-              value=""
               onChange={handleRatioChange}
               className="p-2 rounded-md w-32"
             >
@@ -233,34 +230,30 @@ const VideoUpload = ({ onVideoUpload }) => {
               <option value="9:16">9:16</option>
             </select>
 
-            <label className="text-white" htmlFor="start">
-              Start:
-            </label>
+            <label className="text-white">Start:</label>
             <input
-              id="start"
               type="number"
               value={manualStart}
               onChange={(e) => {
-                if (e.target.value >= 0 && e.target.value <= duration) {
-                  setManualStart(Number(e.target.value));
-                } else {
-                  alert("Time must be in range of video duration!");
+                let val = Number(e.target.value);
+                if (val >= 0 && val < manualEnd) {
+                  setManualStart(val);
+                  setTimeRange([val, manualEnd]);
                 }
               }}
               placeholder="Start Time (s)"
               className="p-2 rounded-md w-32"
             />
-            <label className="text-white" htmlFor="start">
-              End:
-            </label>
+
+            <label className="text-white">End:</label>
             <input
               type="number"
               value={manualEnd}
               onChange={(e) => {
-                if (e.target.value >= 0 && e.target.value <= duration) {
-                  setManualEnd(Number(e.target.value));
-                } else {
-                  alert("Time must be in range of video duration!");
+                let val = Number(e.target.value);
+                if (val > manualStart && val <= duration) {
+                  setManualEnd(val);
+                  setTimeRange([manualStart, val]);
                 }
               }}
               placeholder="End Time (s)"
@@ -270,12 +263,11 @@ const VideoUpload = ({ onVideoUpload }) => {
             <label className="text-white">X:</label>
             <input
               type="number"
-              value={manualX}
+              value={crop.x}
               onChange={(e) => {
-                const val = Number(e.target.value);
+                let val = Number(e.target.value);
                 if (val >= 0 && val <= VIDEO_WIDTH - crop.width) {
-                  setManualX(val);
-                  handleManualChange("x", val);
+                  setCrop((prev) => ({ ...prev, x: val }));
                 }
               }}
               placeholder="X Position"
@@ -285,17 +277,17 @@ const VideoUpload = ({ onVideoUpload }) => {
             <label className="text-white">Y:</label>
             <input
               type="number"
-              value={manualY}
+              value={crop.y}
               onChange={(e) => {
-                const val = Number(e.target.value);
+                let val = Number(e.target.value);
                 if (val >= 0 && val <= VIDEO_HEIGHT - crop.height) {
-                  setManualY(val);
-                  handleManualChange("y", val);
+                  setCrop((prev) => ({ ...prev, y: val }));
                 }
               }}
               placeholder="Y Position"
               className="p-2 rounded-md w-32"
             />
+
             <button
               onClick={addTimeSections}
               className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-all"
