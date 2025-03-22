@@ -204,12 +204,6 @@ const VideoUpload = ({ onVideoUpload }) => {
               />
             </div>
             <div className="flex justify-center items-center gap-4 lg:gap-2">
-              <button
-                onClick={addTimeSection}
-                className="p-2 bg-green-600 hover:bg-green-700 transition-all text-white rounded-lg min-w-28"
-              >
-                Add Section
-              </button>
               <div className="flex justify-center items-center text-white min-w-28">
                 <span className="p-1 rounded">
                   X: {crop.x}px, Y: {crop.y}px
