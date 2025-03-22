@@ -7,10 +7,10 @@ import { PlayArrow, Pause } from "@mui/icons-material";
 const VideoUpload = ({ onVideoUpload }) => {
   const [videoFile, setVideoFile] = useState(null);
   const [crop, setCrop] = useState({
-    width: 400,
-    height: 225,
-    x: 200,
-    y: 112.5,
+    width: 800,
+    height: 430,
+    x: 0,
+    y: 0,
   });
   const [duration, setDuration] = useState(0);
   const [timeRange, setTimeRange] = useState([0, duration]);
@@ -19,7 +19,7 @@ const VideoUpload = ({ onVideoUpload }) => {
   const playerRef = useRef(null);
 
   const VIDEO_WIDTH = 800;
-  const VIDEO_HEIGHT = 450;
+  const VIDEO_HEIGHT = 430;
   
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -91,18 +91,11 @@ const VideoUpload = ({ onVideoUpload }) => {
             <Rnd
               size={{ width: crop.width, height: crop.height }}
               position={{ x: crop.x, y: crop.y }}
-              onDrag={(e, d) =>
-                setCrop((prev) => ({ ...prev, x: d.x, y: d.y }))
-              }
-              onResize={(e, direction, ref, delta, position) =>
-                setCrop({
-                  width: Math.floor(ref.offsetWidth),
-                  height: Math.floor(ref.offsetHeight),
-                  x: Math.floor(position.x),
-                  y: Math.floor(position.y),
-                })
-              }
-              bounds="parent"
+              enableResizing={false} // Disable resizing
+              bounds="parent" // Keep movement inside the video
+              onDrag={(e, d) => {
+                setCrop((prev) => ({ ...prev, x: d.x, y: d.y }));
+              }}
               className="absolute border backdrop-brightness-200 border-white"
             >
               <div
