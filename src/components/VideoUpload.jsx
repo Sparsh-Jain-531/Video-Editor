@@ -208,10 +208,10 @@ const VideoUpload = ({ onVideoUpload }) => {
               type="number"
               value={manualStart}
               onChange={(e) => {
-                if(e.target.value>duration){
-                  alert("Time cannot be more than total duration of video")
-                } else {
+                if(e.target.value>=0 && e.target.value<=duration){
                   setManualStart(Number(e.target.value))
+                } else {
+                  alert("Time must be in range of video duration!")
                 }
               }}
               placeholder="Start Time (s)"
@@ -222,10 +222,10 @@ const VideoUpload = ({ onVideoUpload }) => {
               type="number"
               value={manualEnd}
               onChange={(e) => {
-                if(e.target.value>duration){
-                  alert("Time cannot be more than total duration of video")
-                } else {
+                if(e.target.value>=0 && e.target.value<=duration){
                   setManualEnd(Number(e.target.value))
+                } else {
+                  alert("Time must be in range of video duration!")
                 }
               }}
               placeholder="End Time (s)"
