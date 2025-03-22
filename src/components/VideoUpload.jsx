@@ -114,37 +114,43 @@ const VideoUpload = ({ onVideoUpload }) => {
           </div>
 
           {/* Video Controls & Cropping Options */}
-          <div className="flex items-center w-[55%] mt-4">
-            <button onClick={togglePlayPause} className="mr-4 p-2 bg-blue-950 text-white rounded-full">
+          <div className="flex flex-col lg:flex-row items-center justify-center mt-4">
+            <div className="flex justify-center items-center gap-4 lg:gap-2">
+            <button onClick={togglePlayPause} className=" p-2 bg-blue-950 text-white rounded-full">
               {isPlaying ? <Pause fontSize="large" /> : <PlayArrow fontSize="large" />}
             </button>
             <button onClick={() => setRatio(VIDEO_WIDTH, VIDEO_HEIGHT)} className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg">
               Original
             </button>
-            <button onClick={() => setRatio(16, 9)} className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg">
+            <button onClick={() => setRatio(16, 9)} className="py-2 px-4 bg-blue-950 text-white rounded-lg">
               16:9
             </button>
-            <button onClick={() => setRatio(9, 16)} className="mx-2 py-2 px-4 bg-blue-950 text-white rounded-lg">
+            <button onClick={() => setRatio(9, 16)} className="py-2 px-4 bg-blue-950 text-white rounded-lg">
               9:16
             </button>
-            <span className="text-white mx-4">
+            <span className="text-white min-w-28">
               {crop.width}px x {crop.height}px
             </span>
+            </div>
+            <div className="flex justify-center items-center mx-4 min-w-72">
             <Slider
               value={timeRange}
               onChange={(e, newValue) => setTimeRange(newValue)}
               min={0}
               max={Math.floor(duration)}
               valueLabelDisplay="auto"
-              className="flex-1"
+              className="flex-1 w-full"
             />
-            <button onClick={addTimeSection} className="ml-4 p-2 bg-green-600 hover:bg-green-700 transition-all text-white rounded-lg">
+            </div>
+            <div className="flex justify-center items-center gap-4 lg:gap-2">
+            <button onClick={addTimeSection} className="p-2 bg-green-600 hover:bg-green-700 transition-all text-white rounded-lg min-w-28">
               Add Section
             </button>
-            <div className="mx-4 flex justify-center items-center text-white">
+            <div className="flex justify-center items-center text-white min-w-28">
               <span className="p-1 rounded">
                 X: {crop.x}px, Y: {crop.y}px
               </span>
+            </div>
             </div>
           </div>
 

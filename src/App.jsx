@@ -6,9 +6,11 @@ import VideoInfo from './components/VideoInfo'
 const App = () => {
   return (
     <>
+      <div className='w-full'>
       <Navbar/>
       <VideoUpload/>
       <VideoInfo/>
+      </div>
     </>
   )
 }
