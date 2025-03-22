@@ -24,6 +24,26 @@ const VideoUpload = ({ onVideoUpload }) => {
   const [manualX, setManualX] = useState(0);
   const [manualY, setManualY] = useState(0);
 
+  // Function to update crop area manually
+  const handleManualChange = (key, value) => {
+    setCrop((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
+  // Function to handle ratio selection
+  const handleRatioChange = (event) => {
+    const selectedRatio = event.target.value;
+    if (selectedRatio === "16:9") {
+      setRatio(16, 9);
+    } else if (selectedRatio === "9:16") {
+      setRatio(9, 16);
+    } else {
+      setRatio(VIDEO_WIDTH, VIDEO_HEIGHT);
+    }
+  };
+
   const VIDEO_WIDTH = 800;
   const VIDEO_HEIGHT = 430;
 
@@ -202,48 +222,77 @@ const VideoUpload = ({ onVideoUpload }) => {
 
           <div className="flex flex-wrap justify-center items-center gap-3 mt-4 bg-blue-950 p-4 rounded-md">
             <div className="text-white">Set Time & Crop Position:</div>
-            <label className="text-white" htmlFor="start">Start:</label>
+            <label className="text-white">Ratio:</label>
+            <select
+              value=""
+              onChange={handleRatioChange}
+              className="p-2 rounded-md w-32"
+            >
+              <option value="">Original</option>
+              <option value="16:9">16:9</option>
+              <option value="9:16">9:16</option>
+            </select>
+
+            <label className="text-white" htmlFor="start">
+              Start:
+            </label>
             <input
-            id="start"
+              id="start"
               type="number"
               value={manualStart}
               onChange={(e) => {
-                if(e.target.value>=0 && e.target.value<=duration){
-                  setManualStart(Number(e.target.value))
+                if (e.target.value >= 0 && e.target.value <= duration) {
+                  setManualStart(Number(e.target.value));
                 } else {
-                  alert("Time must be in range of video duration!")
+                  alert("Time must be in range of video duration!");
                 }
               }}
               placeholder="Start Time (s)"
               className="p-2 rounded-md w-32"
             />
-            <label className="text-white" htmlFor="start">End:</label>
+            <label className="text-white" htmlFor="start">
+              End:
+            </label>
             <input
               type="number"
               value={manualEnd}
               onChange={(e) => {
-                if(e.target.value>=0 && e.target.value<=duration){
-                  setManualEnd(Number(e.target.value))
+                if (e.target.value >= 0 && e.target.value <= duration) {
+                  setManualEnd(Number(e.target.value));
                 } else {
-                  alert("Time must be in range of video duration!")
+                  alert("Time must be in range of video duration!");
                 }
               }}
               placeholder="End Time (s)"
               className="p-2 rounded-md w-32"
             />
-            <label className="text-white" htmlFor="start">X:</label>
+
+            <label className="text-white">X:</label>
             <input
               type="number"
               value={manualX}
-              onChange={(e) => setManualX(Number(e.target.value))}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (val >= 0 && val <= VIDEO_WIDTH - crop.width) {
+                  setManualX(val);
+                  handleManualChange("x", val);
+                }
+              }}
               placeholder="X Position"
               className="p-2 rounded-md w-32"
             />
-            <label className="text-white" htmlFor="start">Y:</label>
+
+            <label className="text-white">Y:</label>
             <input
               type="number"
               value={manualY}
-              onChange={(e) => setManualY(Number(e.target.value))}
+              onChange={(e) => {
+                const val = Number(e.target.value);
+                if (val >= 0 && val <= VIDEO_HEIGHT - crop.height) {
+                  setManualY(val);
+                  handleManualChange("y", val);
+                }
+              }}
               placeholder="Y Position"
               className="p-2 rounded-md w-32"
             />
