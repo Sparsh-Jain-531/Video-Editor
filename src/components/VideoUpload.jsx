@@ -51,9 +51,10 @@ const VideoUpload = ({ onVideoUpload }) => {
   const addTimeSection = () => {
     setSelectedSections([
       ...selectedSections,
-      { start: timeRange[0], end: timeRange[1] },
+      { start: timeRange[0], end: timeRange[1], X: crop.x, Y: crop.y },
     ]);
   };
+  console.log(selectedSections)
 
   return (
     <div>
@@ -142,10 +143,13 @@ const VideoUpload = ({ onVideoUpload }) => {
 
           {/* Selected Time Sections */}
           <div>
-            {selectedSections.length > 0 && <div className="text-white text-lg font-semibold">Selected Timelines - </div>}
+            {selectedSections.length > 0 && <div className="text-white text-lg font-semibold text-center mb-2">Selected Timelines - </div>}
             {selectedSections.map((section, index) => (
-              <div key={index} className="p-1 text-white">
-                <span className="my-1 pl-4">{`Start: ${section.start}s, End: ${Math.floor(section.end)}s`}</span>
+              <div key={index} className="text-white">
+                <span className="my-1">
+                  <span className="mr-5"><span className="font-semibold font-serif">Time: </span>{`Start: ${section.start}s, End: ${section.end}s`}</span>
+                  <span><span className="font-semibold font-serif">Dimensions: </span>{`X: ${section.X}px, Y: ${section.Y}px`}</span>
+                </span>
               </div>
             ))}
           </div>
