@@ -5,11 +5,13 @@ import { Slider } from "@mui/material";
 import { PlayArrow, Pause } from "@mui/icons-material";
 
 const VideoUpload = ({ onVideoUpload }) => {
+  const VIDEO_WIDTH = 800;
+  const VIDEO_HEIGHT = 430;
   const [videoFile, setVideoFile] = useState(null);
   const [videoName, setVideoName] = useState("");
   const [crop, setCrop] = useState({
-    width: 800,
-    height: 430,
+    width: VIDEO_WIDTH,
+    height: VIDEO_HEIGHT,
     x: 0,
     y: 0,
   });
@@ -21,8 +23,6 @@ const VideoUpload = ({ onVideoUpload }) => {
   const [manualEnd, setManualEnd] = useState(0);
   const playerRef = useRef(null);
 
-  const VIDEO_WIDTH = 800;
-  const VIDEO_HEIGHT = 430;
 
   // Function to handle ratio selection
   const handleRatioChange = (event) => {
@@ -67,7 +67,7 @@ const VideoUpload = ({ onVideoUpload }) => {
   const addTimeSections = () => {
     setSelectedSections([
       ...selectedSections,
-      { start: manualStart, end: manualEnd, X: crop.x, Y: crop.y },
+      { start: manualStart, end: manualEnd, X: Math.floor(crop.x), Y: Math.floor(crop.y) },
     ]);
   };
 
@@ -150,7 +150,7 @@ const VideoUpload = ({ onVideoUpload }) => {
                 )}
               </button>
               <span className="text-white min-w-28">
-                {crop.width}px x {crop.height}px
+                {Math.floor(crop.width)}px x {Math.floor(crop.height)}px
               </span>
             </div>
             <div className="flex justify-center items-center mx-4 min-w-72">
@@ -170,88 +170,105 @@ const VideoUpload = ({ onVideoUpload }) => {
             <div className="flex justify-center items-center gap-4 lg:gap-2">
               <div className="flex justify-center items-center text-white min-w-28">
                 <span className="p-1 rounded">
-                  X: {crop.x}px, Y: {crop.y}px
+                  X: {Math.floor(crop.x)}px, Y: {Math.floor(crop.y)}px
                 </span>
               </div>
             </div>
           </div>
 
-          <div className="flex flex-wrap justify-center items-center gap-3 mt-4 bg-blue-950 p-4 rounded-md">
-            <div className="text-white">Set Time & Crop Position:</div>
-            <label className="text-white">Ratio:</label>
-            <select
-              onChange={handleRatioChange}
-              className="p-2 rounded-md w-32"
-            >
-              <option value="">Original</option>
-              <option value="16:9">16:9</option>
-              <option value="9:16">9:16</option>
-            </select>
+          <div className="flex flex-col gap-4 flex-wrap justify-center items-center bg-blue-950 p-3 m-2 lg:m-4 rounded-md">
 
-            <label className="text-white">Start:</label>
-            <input
-              type="number"
-              value={manualStart}
-              onChange={(e) => {
-                let val = Number(e.target.value);
-                if (val >= 0 && val < manualEnd) {
-                  setManualStart(val);
-                  setTimeRange([val, manualEnd]);
-                }
-              }}
-              placeholder="Start Time (s)"
-              className="p-2 rounded-md w-32"
-            />
+            <div className="text-white font-semibold text-lg">Set Time & Crop Position</div>
 
-            <label className="text-white">End:</label>
-            <input
-              type="number"
-              value={manualEnd}
-              onChange={(e) => {
-                let val = Number(e.target.value);
-                if (val > manualStart && val <= duration) {
-                  setManualEnd(val);
-                  setTimeRange([manualStart, val]);
-                }
-              }}
-              placeholder="End Time (s)"
-              className="p-2 rounded-md w-32"
-            />
+            <div className="flex justify-center items-center gap-2">
+              <div>
+                <label className="text-white mr-2">Ratio:</label>
+                <select
+                  onChange={handleRatioChange}
+                  className="p-2 rounded-md w-20 lg:w-32"
+                >
+                  <option value="">Original</option>
+                  <option value="16:9">16:9</option>
+                  <option value="9:16">9:16</option>
+                </select>
+              </div>
 
-            <label className="text-white">X:</label>
-            <input
-              type="number"
-              value={crop.x}
-              onChange={(e) => {
-                let val = Number(e.target.value);
-                if (val >= 0 && val <= VIDEO_WIDTH - crop.width) {
-                  setCrop((prev) => ({ ...prev, x: val }));
-                }
-              }}
-              placeholder="X Position"
-              className="p-2 rounded-md w-32"
-            />
+              <div>
+                <label className="text-white mr-2">Start:</label>
+                <input
+                  type="number"
+                  value={manualStart}
+                  onChange={(e) => {
+                    let val = Number(e.target.value);
+                    if (val >= 0 && val < manualEnd) {
+                      setManualStart(val);
+                      setTimeRange([val, manualEnd]);
+                    }
+                  }}
+                  placeholder="Start Time (s)"
+                  className="p-2 rounded-md w-20 lg:w-32"
+                />
+              </div>
 
-            <label className="text-white">Y:</label>
-            <input
-              type="number"
-              value={crop.y}
-              onChange={(e) => {
-                let val = Number(e.target.value);
-                if (val >= 0 && val <= VIDEO_HEIGHT - crop.height) {
-                  setCrop((prev) => ({ ...prev, y: val }));
-                }
-              }}
-              placeholder="Y Position"
-              className="p-2 rounded-md w-32"
-            />
+              <div>
+                <label className="text-white mr-2">End:</label>
+                <input
+                  type="number"
+                  value={manualEnd}
+                  onChange={(e) => {
+                    let val = Number(e.target.value);
+                    if (val > manualStart && val <= duration) {
+                      setManualEnd(val);
+                      setTimeRange([manualStart, val]);
+                    }
+                  }}
+                  placeholder="End Time (s)"
+                  className="p-2 rounded-md w-20 lg:w-32"
+                />
+              </div>
 
-            <button
-              onClick={addTimeSections}
-              className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-all"
-            >
-              Add Section
-            </button>
+              <div>
+                <label className="text-white mr-2">X:</label>
+                <input
+                  type="number"
+                  value={Math.floor(crop.x)}
+                  onChange={(e) => {
+                    let val = Number(e.target.value);
+                    if (val >= 0 && val <= VIDEO_WIDTH - crop.width) {
+                      setCrop((prev) => ({ ...prev, x: val }));
+                    }
+                  }}
+                  placeholder="X Position"
+                  className="p-2 rounded-md w-20 lg:w-32"
+                />
+              </div>
+
+              <div>
+                <label className="text-white mr-2">Y:</label>
+                <input
+                  type="number"
+                  value={Math.floor(crop.y)}
+                  onChange={(e) => {
+                    let val = Number(e.target.value);
+                    if (val >= 0 && val <= VIDEO_HEIGHT - crop.height) {
+                      setCrop((prev) => ({ ...prev, y: val }));
+                    }
+                  }}
+                  placeholder="Y Position"
+                  className="p-2 rounded-md w-20 lg:w-32"
+                />
+              </div>
+            </div>
+
+            <div>
+              <button
+                onClick={addTimeSections}
+                className="p-2 bg-green-600 hover:bg-green-700 text-white rounded-md transition-all"
+              >
+                Add Section
+              </button>
+            </div>
+
           </div>
 
           {/* Selected Time Sections */}
