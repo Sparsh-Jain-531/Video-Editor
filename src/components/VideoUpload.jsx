@@ -17,20 +17,12 @@ const VideoUpload = ({ onVideoUpload }) => {
   const [timeRange, setTimeRange] = useState([0, duration]);
   const [isPlaying, setIsPlaying] = useState(false);
   const [selectedSections, setSelectedSections] = useState([]);
-  const playerRef = useRef(null);
-
   const [manualStart, setManualStart] = useState(0);
   const [manualEnd, setManualEnd] = useState(0);
-  const [manualX, setManualX] = useState(0);
-  const [manualY, setManualY] = useState(0);
+  const playerRef = useRef(null);
 
-  // Function to update crop area manually
-  const handleManualChange = (key, value) => {
-    setCrop((prev) => ({
-      ...prev,
-      [key]: value,
-    }));
-  };
+  const VIDEO_WIDTH = 800;
+  const VIDEO_HEIGHT = 430;
 
   // Function to handle ratio selection
   const handleRatioChange = (event) => {
@@ -56,9 +48,6 @@ const VideoUpload = ({ onVideoUpload }) => {
     });
   };
 
-  const VIDEO_WIDTH = 800;
-  const VIDEO_HEIGHT = 430;
-
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
@@ -75,35 +64,10 @@ const VideoUpload = ({ onVideoUpload }) => {
     setIsPlaying((prev) => !prev);
   };
 
-  const setRatio = (widthRatio, heightRatio) => {
-    const newWidth = Math.min(
-      VIDEO_WIDTH,
-      (VIDEO_HEIGHT * widthRatio) / heightRatio
-    );
-    const newHeight = Math.min(
-      VIDEO_HEIGHT,
-      (VIDEO_WIDTH * heightRatio) / widthRatio
-    );
-
-    setCrop({
-      width: Math.floor(newWidth),
-      height: Math.floor(newHeight),
-      x: Math.floor((VIDEO_WIDTH - newWidth) / 2),
-      y: Math.floor((VIDEO_HEIGHT - newHeight) / 2),
-    });
-  };
-
-  const addTimeSection = () => {
-    setSelectedSections([
-      ...selectedSections,
-      { start: timeRange[0], end: timeRange[1], X: crop.x, Y: crop.y },
-    ]);
-  };
-
   const addTimeSections = () => {
     setSelectedSections([
       ...selectedSections,
-      { start: manualStart, end: manualEnd, X: manualX, Y: manualY },
+      { start: manualStart, end: manualEnd, X: crop.x, Y: crop.y },
     ]);
   };
 

@@ -6,15 +6,7 @@ const VideoInfo = () => {
       <div className="w-[50%]">
         <div className="font-bold text-2xl">Online Video Cropper</div>
         <p className="mt-4">
-          This online video editing software makes it easy to crop your videos
-          in a matter of minutes. Upload a file, select an area, and crop the
-          video to size. Also, you can choose from popular aspect ratios, such
-          as 16:9, 4:3, their vertical counterparts, square, etc. This way, you
-          can easily adapt videos for all social networks and their specific
-          requirements. All popular formats are supported for uploading, such as
-          MP4, M4V, AVI, MOV, WMV, 3GP, WEBM, and many others. You can quickly
-          crop it and download the result in MP4, MKV, MOV, or a format of your
-          original file.
+        Video Crop & Trim is a simple yet powerful online tool that allows users to effortlessly edit their videos with precision. With this platform, you can easily upload any video file and customize it to fit your needs. It provides an intuitive cropping feature that lets you adjust the visible portion of the video by resizing and repositioning the crop area. You can also choose from predefined aspect ratios like 16:9, 9:16, or keep the original dimensions to ensure your video fits perfectly on different platforms. Additionally, the tool allows you to trim your video by selecting a specific start and end time using an interactive timeline. You can save multiple cropped and trimmed sections for added flexibility. With real-time preview functionality, you can instantly see the changes before finalizing your edits. No complicated software is required—just upload, edit, and create your perfect video in minutes.
         </p>
       </div>
     </div>
